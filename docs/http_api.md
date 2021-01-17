@@ -1,5 +1,9 @@
 # HTTP API
 
+This document contains specifications for the APIs that will be used in this project.
+
+Table of contents:
+
 - [Search](#search)
 - [View Page](#view-page)
 
@@ -10,6 +14,8 @@
 GET: `/search?q=<query_string>&page=<page_number>`
 
 This API is used for short displaying pages that relevant to query. The result is already sorted from most to least relevant pages.
+
+In case no result is found, the value of `relevants` will be `null`.
 
 **Query Params:**
 
@@ -36,7 +42,6 @@ Content-Type: application/json
                 "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just...",
                 "url": "/pages/123?q=Hamlet+special"
             },
-            ...
             {
                 "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?",
                 "url": "/pages/743?q=Hamlet+special"
@@ -47,6 +52,22 @@ Content-Type: application/json
     }
 }
 ```
+
+**Error Responses:**
+
+- Page Not Found
+
+    ```json
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+
+    {
+        "ok": false,
+        "err": "ERR_PAGE_NOT_FOUND"
+    }
+    ```
+
+    Client will receive this error when it is trying to access non existent page. For example the total pages is `10`, but the client tried to access the page `11`.
 
 [Back to Top](#http-api)
 
@@ -60,7 +81,7 @@ This API is used for viewing page in details, basically it's like when you open 
 
 **Query Params:**
 
-- `q`, String => words that will be highlighted in page
+- `q`, String => words that will be highlighted in the page
 
 **Example Request:**
 
@@ -85,3 +106,23 @@ Content-Type: application/json
     }
 }
 ```
+
+**Error Responses:**
+
+- Page Not Found
+
+    ```json
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+
+    {
+        "ok": false,
+        "err": "ERR_PAGE_NOT_FOUND"
+    }
+    ```
+
+    Client will receive this error when it is trying to access non existent page. For example the total pages is `10`, but the client tried to access the page `11`.
+
+[Back to Top](#http-api)
+
+---
