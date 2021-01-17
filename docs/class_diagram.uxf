@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>350</x>
+      <y>220</y>
+      <w>540</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>index.Index
+--
+-revIndexMap: map[string][]int // in implementation we use sync.Map
+-excludeWordMap: map[string]struct{} // in implementation we use sync.Map
+--
++Index(d: index.Document): error
++Search(q: string, page: int): (*index.SearchResult, error)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1010</x>
+      <y>210</y>
+      <w>310</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;index.Document&gt;&gt;
+--
++GetID(): int
++GetWords(): []string
++GetData(): String
++GetShortHTML(): string
++GetHighlightedHTML(query: string): string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>240</y>
+      <w>220</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>index.SearchResult
+--
++Relevants: []index.Document
++TotalPages: int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>210</x>
+      <y>260</y>
+      <w>160</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>880</x>
+      <y>260</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1010</x>
+      <y>390</y>
+      <w>310</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>doc.Document
+--
+-id: int
+-shortTag: doc.Tag
+-highlightTag: doc.Tag
+-wordMap: map[string][]doc.WordPos
+--
++GetID(): int
++GetWords(): []string
++GetData(): String
++GetShortHTML(): string
++GetHighlightedHTML(query: string): string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1410</x>
+      <y>410</y>
+      <w>100</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>doc.Tag
+--
++Start: string
++End: string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1150</x>
+      <y>310</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1310</x>
+      <y>430</y>
+      <w>120</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1410</x>
+      <y>500</y>
+      <w>100</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>doc.WordPos
+--
++StartIdx: int
++EndIdx: int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1310</x>
+      <y>520</y>
+      <w>120</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
