@@ -10,12 +10,14 @@ type Index struct {
 	docMap         map[int]Document
 	revIndexMap    map[string][]int
 	excludeWordMap map[string]struct{}
+	pageLimit      int
 }
 
 // Configs holds configs for Index
 type Configs struct {
 	Documents     []Document
 	ExcludedWords []string
+	PageLimit     int
 }
 
 // New returns new instance of Index
@@ -59,8 +61,14 @@ func New(c Configs) (*Index, error) {
 }
 
 // Search returns relevant documents based on given query
-func (i *Index) Search(q string, page int) (*SearchResult, error) {
-	// TODO
+func (i *Index) Search(q Query, page int) (*SearchResult, error) {
+	// break query into words
+	// create appearance counter map
+	// get document ids for each query words
+	// increment appearance counter map
+	// convert appearance counter map to list
+	// sort the list from highest to lowest appearance
+	// select the element for given page
 	return nil, nil
 }
 

@@ -4,26 +4,27 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>320</x>
-      <y>168</y>
-      <w>320</w>
-      <h>88</h>
+      <x>328</x>
+      <y>72</y>
+      <w>352</w>
+      <h>104</h>
     </coordinates>
     <panel_attributes>index.Index
 --
 -docMap: map[int]index.Document
 -revIndexMap: map[string][]int
 -excludeWordMap: map[string]struct{}
+-pageLimit: int
 --
-+Search(q: string, page: int): (*index.SearchResult, error)
++Search(q: index.Query, page: int): (*index.SearchResult, error)
 +Get(id: int): (*index.Document, error)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>808</x>
-      <y>160</y>
+      <x>816</x>
+      <y>64</y>
       <w>248</w>
       <h>88</h>
     </coordinates>
@@ -39,8 +40,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>184</y>
+      <x>8</x>
+      <y>88</y>
       <w>176</w>
       <h>48</h>
     </coordinates>
@@ -53,8 +54,8 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>168</x>
-      <y>200</y>
+      <x>176</x>
+      <y>104</y>
       <w>168</w>
       <h>24</h>
     </coordinates>
@@ -64,19 +65,19 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>632</x>
-      <y>200</y>
-      <w>192</w>
+      <x>672</x>
+      <y>104</y>
+      <w>160</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>220.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>180.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>808</x>
-      <y>304</y>
+      <x>816</x>
+      <y>208</y>
       <w>248</w>
       <h>144</h>
     </coordinates>
@@ -97,8 +98,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1128</x>
-      <y>320</y>
+      <x>1136</x>
+      <y>224</y>
       <w>80</w>
       <h>48</h>
     </coordinates>
@@ -111,8 +112,8 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>920</x>
-      <y>240</y>
+      <x>928</x>
+      <y>144</y>
       <w>24</w>
       <h>80</h>
     </coordinates>
@@ -122,8 +123,8 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1048</x>
-      <y>336</y>
+      <x>1056</x>
+      <y>240</y>
       <w>96</w>
       <h>24</h>
     </coordinates>
@@ -133,8 +134,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1128</x>
-      <y>392</y>
+      <x>1136</x>
+      <y>296</y>
       <w>80</w>
       <h>48</h>
     </coordinates>
@@ -147,12 +148,62 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1048</x>
-      <y>408</y>
+      <x>1056</x>
+      <y>312</y>
       <w>96</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>424</x>
+      <y>248</y>
+      <w>128</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;index.Query&gt;&gt;
+--
++GetWords(): []string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>480</x>
+      <y>168</y>
+      <w>24</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>424</x>
+      <y>352</y>
+      <w>128</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>query.Query
+--
+string
+--
++GetWords(): []string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>480</x>
+      <y>280</y>
+      <w>24</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
 </diagram>

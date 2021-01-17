@@ -9,6 +9,11 @@ type Document interface {
 	GetHighlightedHTML(query string) string
 }
 
+// Query represents single query for search
+type Query interface {
+	GetWords() []string
+}
+
 // SearchResult represents result of Search()
 type SearchResult struct {
 	Relevants  []Document
