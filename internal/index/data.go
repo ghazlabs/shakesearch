@@ -5,7 +5,7 @@ type Document interface {
 	GetID() int
 	GetWords() []string
 	GetData() string
-	GetShortHTML() string
+	GetShortHTML(query string) string
 	GetHighlightedHTML(query string) string
 }
 
