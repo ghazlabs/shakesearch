@@ -16,6 +16,11 @@ type API struct {
 	idx index.Index
 }
 
+// New returns new instance of API
+func New(idx index.Index) *API {
+	return &API{idx: idx}
+}
+
 // GetHandler returns http handler for API
 func (a *API) GetHandler() http.Handler {
 	r := chi.NewRouter()
