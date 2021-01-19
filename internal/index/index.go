@@ -29,16 +29,16 @@ type Configs struct {
 }
 
 // New returns new instance of Index
-func New(c Configs) (*Index, error) {
+func New(configs Configs) (*Index, error) {
 	// construct exclude word map
 	excludeWordMap := map[string]struct{}{}
-	for _, word := range c.ExcludedWords {
+	for _, word := range configs.ExcludedWords {
 		excludeWordMap[word] = struct{}{}
 	}
 	// construct document map & reverse index map
 	docMap := map[int]Document{}
 	revIndexMap := map[string][]int{}
-	for _, doc := range c.Documents {
+	for _, doc := range configs.Documents {
 		// set the document in document map
 		docMap[doc.GetID()] = doc
 		// get doc words and iterate on them
@@ -64,6 +64,7 @@ func New(c Configs) (*Index, error) {
 		docMap:         docMap,
 		revIndexMap:    revIndexMap,
 		excludeWordMap: excludeWordMap,
+		pageLimit:      configs.PageLimit,
 	}
 	return &i, nil
 }
@@ -97,10 +98,16 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	}
 	// sort the list from highest to lowest appearance
 	sort.Slice(tupples, func(i, j int) bool {
-		return tupples[i].Counter < tupples[j].Counter
+		return tupples[i].Counter > tupples[j].Counter
 	})
-	// check if page is exists
+	// if totalPages is zero, returns empty list and set total pages to 1
+	// notice that we set the total pages into 1 because logically we want
+	// to show the empty result in first page
 	totalPages := int(math.Ceil(float64(len(tupples)) / float64(i.pageLimit)))
+	if totalPages == 0 && page == 0 {
+		return &SearchResult{Relevants: nil, TotalPages: 1}, nil
+	}
+	// if page is not exist returns error
 	if page >= totalPages {
 		return nil, ErrPageNotFound
 	}

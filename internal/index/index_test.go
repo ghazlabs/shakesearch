@@ -30,19 +30,45 @@ func TestNormalSearch(t *testing.T) {
 		index.Configs{
 			Documents:     docs,
 			ExcludedWords: stopWords,
-			PageLimit:     3,
+			PageLimit:     2,
 		},
 	)
 	if err != nil {
 		t.Fatalf("unable to initialize index due: %v", err)
 	}
-	// search for `cat`
+	// search for `cat`, get second page (page 0)
 	result, err := idx.Search(mockQuery("cat"), 0)
 	if err != nil {
 		t.Fatalf("unable to search due: %v", err)
 	}
-	// check result
-	expIDs := []int{1, 4, 3}
+	// check total pages, we should get 2 total pages from result
+	expTotalPages := 2
+	if result.TotalPages != expTotalPages {
+		t.Fatalf("unexpected total pages, exp: %v, got: %v", expTotalPages, result.TotalPages)
+	}
+	// check result on first page
+	expIDs := []int{1, 4}
+	if len(result.Relevants) != len(expIDs) {
+		t.Fatalf("unexpected relevant ids: %+v, exp: %v", result.Relevants, expIDs)
+	}
+	for i := 0; i < len(expIDs); i++ {
+		expID := expIDs[i]
+		gotID := result.Relevants[i].GetID()
+		if gotID != expID {
+			t.Fatalf("unexpected id, exp: %v, got: %v", expID, gotID)
+		}
+	}
+	// search for `cat`, get second page (page 1)
+	result, err = idx.Search(mockQuery("cat"), 1)
+	if err != nil {
+		t.Fatalf("unable to search due: %v", err)
+	}
+	// check total pages, we should get 2 total pages from result (no different when we get first page)
+	if result.TotalPages != expTotalPages {
+		t.Fatalf("unexpected total pages, exp: %v, got: %v", expTotalPages, result.TotalPages)
+	}
+	// check result on second page
+	expIDs = []int{3}
 	if len(result.Relevants) != len(expIDs) {
 		t.Fatalf("unexpected relevant ids: %+v, exp: %v", result.Relevants, expIDs)
 	}
@@ -70,13 +96,15 @@ func TestPageNotFoundSearch(t *testing.T) {
 		index.Configs{
 			Documents:     docs,
 			ExcludedWords: stopWords,
-			PageLimit:     3,
+			PageLimit:     2,
 		},
 	)
 	if err != nil {
 		t.Fatalf("unable to initialize index due: %v", err)
 	}
-	// search for `cat`, but set to page 3
+	// search for `cat`, we expect to get only maximum 2 pages
+	// but in here we fetch the forth page (page 3), it should
+	// throw ERR_PAGE_NOT_FOUND
 	_, err = idx.Search(mockQuery("cat"), 3)
 	if err != index.ErrPageNotFound {
 		t.Fatalf("unexpected error, exp: %v, got: %v", index.ErrPageNotFound, err)
@@ -98,13 +126,13 @@ func TestNoResultSearch(t *testing.T) {
 		index.Configs{
 			Documents:     docs,
 			ExcludedWords: stopWords,
-			PageLimit:     3,
+			PageLimit:     2,
 		},
 	)
 	if err != nil {
 		t.Fatalf("unable to initialize index due: %v", err)
 	}
-	// search for `earth`
+	// search for `earth`, we should get empty result
 	result, err := idx.Search(mockQuery("earth"), 0)
 	if err != nil {
 		t.Fatalf("unable to search due: %v", err)
@@ -113,6 +141,11 @@ func TestNoResultSearch(t *testing.T) {
 	expResultIDs := []int{}
 	if len(result.Relevants) != len(expResultIDs) {
 		t.Fatalf("search result should be empty, got: %v", result.Relevants)
+	}
+	// returned total pages should be 1
+	expTotalPages := 1
+	if result.TotalPages != expTotalPages {
+		t.Fatalf("unexpected total pages, exp: %v, got: %v", expTotalPages, result.TotalPages)
 	}
 }
 

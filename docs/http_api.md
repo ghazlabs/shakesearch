@@ -30,28 +30,47 @@ GET /search?q=Hamlet+special
 
 **Success Response:**
 
-```json
-HTTP/1.1 200 OK
-Content-Type: application/json
+- Normal Response:
 
-{
-    "ok": true,
-    "data": {
-        "relevants": [
-            {
-                "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just...",
-                "url": "/pages/123?q=Hamlet+special"
-            },
-            {
-                "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?",
-                "url": "/pages/743?q=Hamlet+special"
-            }
-        ],
-        "current_page": 1,
-        "total_pages": 10
+    ```json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+        "ok": true,
+        "data": {
+            "relevants": [
+                {
+                    "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just...",
+                    "url": "/pages/123?q=Hamlet+special"
+                },
+                {
+                    "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?",
+                    "url": "/pages/743?q=Hamlet+special"
+                }
+            ],
+            "current_page": 1,
+            "total_pages": 10
+        }
     }
-}
-```
+    ```
+
+- No Result Response:
+
+    ```json
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+        "ok": true,
+        "data": {
+            "relevants": null,
+            "current_page": 1,
+            "total_pages": 1
+        }
+    }
+    ```
+
 
 **Error Responses:**
 
