@@ -9,10 +9,10 @@ import (
 
 // Index represents in-memory index for documents
 type Index struct {
-	docMap         map[int]Document
-	revIndexMap    map[string][]int
-	excludeWordMap map[string]struct{}
-	pageLimit      int
+	docs            []Document
+	revIndexWordMap map[string][]int
+	excludeWordMap  map[string]struct{}
+	pageLimit       int
 }
 
 // Configs holds configs for Index
@@ -30,13 +30,12 @@ func New(configs Configs) (*Index, error) {
 		excludeWordMap[word] = struct{}{}
 	}
 	// construct document map & reverse index map
-	docMap := map[int]Document{}
 	revIndexMap := map[string][]int{}
-	for _, doc := range configs.Documents {
-		// set the document in document map
-		docMap[doc.GetID()] = doc
+	for i := 0; i < len(configs.Documents); i++ {
+		// set doc id to value of i
+		configs.Documents[i].SetID(i)
 		// get doc words and iterate on them
-		for _, word := range doc.GetWords() {
+		for _, word := range configs.Documents[i].GetWords() {
 			// if word is excluded, just skip it
 			_, skipped := excludeWordMap[word]
 			if skipped {
@@ -49,16 +48,16 @@ func New(configs Configs) (*Index, error) {
 				v = []int{}
 			}
 			// insert current document id to map
-			v = append(v, doc.GetID())
+			v = append(v, configs.Documents[i].GetID())
 			revIndexMap[word] = v
 		}
 	}
 	// initialize index
 	i := Index{
-		docMap:         docMap,
-		revIndexMap:    revIndexMap,
-		excludeWordMap: excludeWordMap,
-		pageLimit:      configs.PageLimit,
+		docs:            configs.Documents,
+		revIndexWordMap: revIndexMap,
+		excludeWordMap:  excludeWordMap,
+		pageLimit:       configs.PageLimit,
 	}
 	return &i, nil
 }
@@ -77,7 +76,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 			continue
 		}
 		// increment appearance counter map
-		docIDs := i.revIndexMap[word]
+		docIDs := i.revIndexWordMap[word]
 		for _, docID := range docIDs {
 			counterMap[docID]++
 		}
@@ -115,7 +114,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	selectedTupples := tupples[startIdx:endIdx]
 	var docs []Document
 	for _, tupple := range selectedTupples {
-		docs = append(docs, i.docMap[tupple.DocID])
+		docs = append(docs, i.docs[tupple.DocID])
 	}
 	result := &SearchResult{
 		Relevants:  docs,
@@ -130,10 +129,26 @@ type tuppleDocIDCounter struct {
 }
 
 // Get returns index for given id, throws error if id is not exists
-func (i *Index) Get(id int) (*Document, error) {
-	v, ok := i.docMap[id]
-	if !ok {
+func (i *Index) Get(id int) (*GetResults, error) {
+	if id >= len(i.docs) {
 		return nil, errs.NewErrDocNotFound()
 	}
-	return &v, nil
+	// set next id
+	nextID := -1
+	if id < len(i.docs)-1 {
+		nextID = id + 1
+	}
+	// set prev id
+	prevID := -1
+	if id > 0 {
+		prevID = id - 1
+	}
+	// construct result
+	result := &GetResults{
+		Doc:       i.docs[id],
+		NextID:    nextID,
+		PrevID:    prevID,
+		TotalDocs: len(i.docs),
+	}
+	return result, nil
 }

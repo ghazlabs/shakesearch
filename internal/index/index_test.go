@@ -22,11 +22,11 @@ var stopWords = []string{
 func TestNormalSearch(t *testing.T) {
 	// initialize documents to be indexed
 	docs := []index.Document{
-		&mockDocument{id: 0, data: "hello world this is document 0"},
-		&mockDocument{id: 1, data: "cat is currently walking this is document 1 fish cat fly cat"},
-		&mockDocument{id: 2, data: "you know why we have this document this is document 2"},
-		&mockDocument{id: 3, data: "i'm fan of cat steven this is document 3"},
-		&mockDocument{id: 4, data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+		&mockDocument{data: "hello world this is document 0"},
+		&mockDocument{data: "cat is currently walking this is document 1 fish cat fly cat"},
+		&mockDocument{data: "you know why we have this document this is document 2"},
+		&mockDocument{data: "i'm fan of cat steven this is document 3"},
+		&mockDocument{data: "perhaps i'm no longer exists maybe as cat guarding cat"},
 	}
 	// initialize index
 	idx, err := index.New(
@@ -88,11 +88,11 @@ func TestNormalSearch(t *testing.T) {
 func TestPageNotFoundSearch(t *testing.T) {
 	// initialize documents to be indexed
 	docs := []index.Document{
-		&mockDocument{id: 0, data: "hello world this is document 0"},
-		&mockDocument{id: 1, data: "cat is currently walking this is document 1 fish cat fly cat"},
-		&mockDocument{id: 2, data: "you know why we have this document this is document 2"},
-		&mockDocument{id: 3, data: "i'm fan of cat steven this is document 3"},
-		&mockDocument{id: 4, data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+		&mockDocument{data: "hello world this is document 0"},
+		&mockDocument{data: "cat is currently walking this is document 1 fish cat fly cat"},
+		&mockDocument{data: "you know why we have this document this is document 2"},
+		&mockDocument{data: "i'm fan of cat steven this is document 3"},
+		&mockDocument{data: "perhaps i'm no longer exists maybe as cat guarding cat"},
 	}
 	// initialize index
 	idx, err := index.New(
@@ -118,11 +118,11 @@ func TestPageNotFoundSearch(t *testing.T) {
 func TestNoResultSearch(t *testing.T) {
 	// initialize documents to be indexed
 	docs := []index.Document{
-		&mockDocument{id: 0, data: "hello world this is document 0"},
-		&mockDocument{id: 1, data: "cat is currently walking this is document 1 fish cat fly cat"},
-		&mockDocument{id: 2, data: "you know why we have this document this is document 2"},
-		&mockDocument{id: 3, data: "i'm fan of cat steven this is document 3"},
-		&mockDocument{id: 4, data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+		&mockDocument{data: "hello world this is document 0"},
+		&mockDocument{data: "cat is currently walking this is document 1 fish cat fly cat"},
+		&mockDocument{data: "you know why we have this document this is document 2"},
+		&mockDocument{data: "i'm fan of cat steven this is document 3"},
+		&mockDocument{data: "perhaps i'm no longer exists maybe as cat guarding cat"},
 	}
 	// initialize index
 	idx, err := index.New(
@@ -161,6 +161,10 @@ func (q mockQuery) GetWords() []string {
 type mockDocument struct {
 	id   int
 	data string
+}
+
+func (d *mockDocument) SetID(id int) {
+	d.id = id
 }
 
 func (d *mockDocument) GetID() int {
