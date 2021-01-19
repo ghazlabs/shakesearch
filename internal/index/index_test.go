@@ -57,12 +57,63 @@ func TestNormalSearch(t *testing.T) {
 
 // Test Page Not Found Search
 func TestPageNotFoundSearch(t *testing.T) {
-	// TODO
+	// initialize documents to be indexed
+	docs := []index.Document{
+		&mockDocument{id: 0, data: "hello world this is document 0"},
+		&mockDocument{id: 1, data: "cat is currently walking this is document 1 fish cat fly cat"},
+		&mockDocument{id: 2, data: "you know why we have this document this is document 2"},
+		&mockDocument{id: 3, data: "i'm fan of cat steven this is document 3"},
+		&mockDocument{id: 4, data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+	}
+	// initialize index
+	idx, err := index.New(
+		index.Configs{
+			Documents:     docs,
+			ExcludedWords: stopWords,
+			PageLimit:     3,
+		},
+	)
+	if err != nil {
+		t.Fatalf("unable to initialize index due: %v", err)
+	}
+	// search for `cat`, but set to page 3
+	_, err = idx.Search(mockQuery("cat"), 3)
+	if err != index.ErrPageNotFound {
+		t.Fatalf("unexpected error, exp: %v, got: %v", index.ErrPageNotFound, err)
+	}
 }
 
 // Test No Result Search
 func TestNoResultSearch(t *testing.T) {
-	// TODO
+	// initialize documents to be indexed
+	docs := []index.Document{
+		&mockDocument{id: 0, data: "hello world this is document 0"},
+		&mockDocument{id: 1, data: "cat is currently walking this is document 1 fish cat fly cat"},
+		&mockDocument{id: 2, data: "you know why we have this document this is document 2"},
+		&mockDocument{id: 3, data: "i'm fan of cat steven this is document 3"},
+		&mockDocument{id: 4, data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+	}
+	// initialize index
+	idx, err := index.New(
+		index.Configs{
+			Documents:     docs,
+			ExcludedWords: stopWords,
+			PageLimit:     3,
+		},
+	)
+	if err != nil {
+		t.Fatalf("unable to initialize index due: %v", err)
+	}
+	// search for `earth`
+	result, err := idx.Search(mockQuery("earth"), 0)
+	if err != nil {
+		t.Fatalf("unable to search due: %v", err)
+	}
+	// check result
+	expResultIDs := []int{}
+	if len(result.Relevants) != len(expResultIDs) {
+		t.Fatalf("search result should be empty, got: %v", result.Relevants)
+	}
 }
 
 type mockQuery string
