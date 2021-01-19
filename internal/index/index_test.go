@@ -1,12 +1,15 @@
 package index_test
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
+	"pulley.com/shakesearch/internal/errs"
 	"pulley.com/shakesearch/internal/index"
 )
 
+// this standard stopwords from lucene index for english language
 var stopWords = []string{
 	"a", "an", "and", "are", "as", "at", "be", "but", "by",
 	"for", "if", "in", "into", "is", "it",
@@ -106,8 +109,8 @@ func TestPageNotFoundSearch(t *testing.T) {
 	// but in here we fetch the forth page (page 3), it should
 	// throw ERR_PAGE_NOT_FOUND
 	_, err = idx.Search(mockQuery("cat"), 3)
-	if err != index.ErrPageNotFound {
-		t.Fatalf("unexpected error, exp: %v, got: %v", index.ErrPageNotFound, err)
+	if errors.Is(err, errs.NewErrDocNotFound()) {
+		t.Fatalf("unexpected error, exp: %v, got: %v", errs.NewErrDocNotFound(), err)
 	}
 }
 

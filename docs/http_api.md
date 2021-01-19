@@ -15,11 +15,11 @@ GET: `/search?q=<query_string>&page=<page_number>`
 
 This API is used for short displaying pages that relevant to query. The result is already sorted from most to least relevant pages.
 
-In case no result is found, the value of `relevants` will be `null`.
+Page number started from `1`.
 
 **Query Params:**
 
-- `q`, String => query for the search.
+- `q`, String => query for the search, url encoded.
 - `page`, Integer, _OPTIONAL_ => by default set to `1`.
 
 **Example Request:**
@@ -64,7 +64,7 @@ GET /search?q=Hamlet+special
     {
         "ok": true,
         "data": {
-            "relevants": null,
+            "relevants": [],
             "current_page": 1,
             "total_pages": 1
         }
@@ -73,6 +73,20 @@ GET /search?q=Hamlet+special
 
 
 **Error Responses:**
+
+- Empty Query
+
+    ```json
+    HTTP/1.1 400 Bad Request
+    Content-Type: application/json
+
+    {
+        "ok": false,
+        "err": "ERR_EMPTY_QUERY"
+    }
+    ```
+
+    Client will receive this error when it is sending empty query to server.
 
 - Page Not Found
 
@@ -97,6 +111,8 @@ GET /search?q=Hamlet+special
 GET: `/pages/<page_number>?q=<query_string>`
 
 This API is used for viewing page in details, basically it's like when you open result from the google book, you will be pointed to the page & your query words will be highlighted.
+
+Page number started from `1`.
 
 **Query Params:**
 

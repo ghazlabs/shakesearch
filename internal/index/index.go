@@ -1,16 +1,10 @@
 package index
 
 import (
-	"errors"
 	"math"
 	"sort"
-)
 
-var (
-	// ErrDocNotFound represents error returned when document is not found
-	ErrDocNotFound = errors.New("ERR_DOC_NOT_FOUND")
-	// ErrPageNotFound represents error returned when page is not found
-	ErrPageNotFound = errors.New("ERR_PAGE_NOT_FOUND")
+	"pulley.com/shakesearch/internal/errs"
 )
 
 // Index represents in-memory index for documents
@@ -109,7 +103,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	}
 	// if page is not exist returns error
 	if page >= totalPages {
-		return nil, ErrPageNotFound
+		return nil, errs.NewErrPageNotFound()
 	}
 	// select the elements for given page
 	startIdx := page * i.pageLimit
@@ -139,7 +133,7 @@ type tuppleDocIDCounter struct {
 func (i *Index) Get(id int) (*Document, error) {
 	v, ok := i.docMap[id]
 	if !ok {
-		return nil, ErrDocNotFound
+		return nil, errs.NewErrDocNotFound()
 	}
 	return &v, nil
 }
