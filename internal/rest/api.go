@@ -51,5 +51,22 @@ func (a *API) serveSearch(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) serveViewPage(w http.ResponseWriter, r *http.Request) {
-	// TODO
+	// get page number for url path
+	page, _ := strconv.Atoi(chi.URLParam(r, "page_number"))
+	if page <= 0 {
+		render.Render(w, r, newErrResp(errs.NewErrPageNotFound()))
+		return
+	}
+	// get query from query params, this is optional param
+	queryString := r.URL.Query().Get("q")
+
+	// get document from index, we decrement the page because doc id start
+	// from 0 in index
+	result, err := a.idx.Get(page - 1)
+	if err != nil {
+		render.Render(w, r, newErrResp(err))
+		return
+	}
+	// output success response
+	render.Render(w, r, newSuccessResp(newViewPageData(queryString, page, result)))
 }

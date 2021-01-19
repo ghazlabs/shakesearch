@@ -116,7 +116,7 @@ Page number started from `1`.
 
 **Query Params:**
 
-- `q`, String => words that will be highlighted in the page
+- `q`, String, _OPTIONAL_ => words that will be highlighted in the page
 
 **Example Request:**
 

@@ -72,7 +72,26 @@ type searchRelevant struct {
 type viewPageData struct {
 	BodyHTML    string `json:"body_html"`
 	CurrentPage int    `json:"current_page"`
-	PrevPage    int    `json:"prev_page"`
-	NextPage    int    `json:"next_page"`
+	PrevPage    *int   `json:"prev_page"`
+	NextPage    *int   `json:"next_page"`
 	TotalPages  int    `json:"total_pages"`
+}
+
+func newViewPageData(queryString string, currentPage int, result *index.GetResults) *viewPageData {
+	d := &viewPageData{
+		BodyHTML:    result.Doc.GetHighlightedHTML(queryString),
+		CurrentPage: currentPage,
+		TotalPages:  result.TotalDocs,
+	}
+	// set next page
+	if result.NextID != -1 {
+		nextPage := result.NextID + 1 // +1 because page started with 1, yet id with 0
+		d.NextPage = &nextPage
+	}
+	// set prev page
+	if result.PrevID != -1 {
+		prevPage := result.PrevID + 1 // +1 because page started with 1, yet id with 0
+		d.PrevPage = &prevPage
+	}
+	return d
 }
