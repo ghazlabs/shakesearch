@@ -79,6 +79,10 @@ func (d *Document) GetShortHTML(queryString string) string {
 			lineMap[lineIdx] = struct{}{}
 		}
 	}
+	// if no line found, returns empty string
+	if len(lineMap) == 0 {
+		return ""
+	}
 	// convert line map into list
 	lineIdxs := make([]int, 0, len(lineMap))
 	for lineIdx := range lineMap {
