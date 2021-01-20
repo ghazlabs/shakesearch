@@ -7,9 +7,3 @@ type Tag struct {
 	Start string
 	End   string
 }
-
-// WordPos represents word location
-type WordPos struct {
-	StartIdx int
-	EndIdx   int
-}
