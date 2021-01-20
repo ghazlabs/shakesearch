@@ -21,15 +21,36 @@ type Document struct {
 
 // Configs represents configs for Document
 type Configs struct {
-	Data         string
+	Lines        []string
 	ShortTag     Tag
 	HighlightTag Tag
 }
 
 // New returns new instance of Document
 func New(c Configs) (*Document, error) {
-	// TODO
-	return nil, nil
+	// construct word map
+	wordMap := map[string][]int{}
+	for i := 0; i < len(c.Lines); i++ {
+		currentLine := c.Lines[i]
+		words := query.Query(currentLine).GetWords()
+		for _, word := range words {
+			v, ok := wordMap[word]
+			if !ok {
+				v = []int{}
+			}
+			v = append(v, i)
+			wordMap[word] = v
+		}
+	}
+	// construct documents
+	doc := &Document{
+		data:         strings.Join(c.Lines, "\n"),
+		shortTag:     c.ShortTag,
+		highlightTag: c.HighlightTag,
+		wordMap:      wordMap,
+		lines:        c.Lines,
+	}
+	return doc, nil
 }
 
 // SetID is used for setting the document id
