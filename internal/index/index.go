@@ -3,6 +3,7 @@ package index
 import (
 	"math"
 	"sort"
+	"strings"
 
 	"pulley.com/shakesearch/internal/errs"
 )
@@ -36,6 +37,9 @@ func New(configs Configs) (*Index, error) {
 		configs.Documents[i].SetID(i)
 		// get doc words and iterate on them
 		for _, word := range configs.Documents[i].GetWords() {
+			// lower word case, this is to make the search process
+			// case insensitive
+			word = strings.ToLower(word)
 			// if word is excluded, just skip it
 			_, skipped := excludeWordMap[word]
 			if skipped {
@@ -70,6 +74,9 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	counterMap := map[int]int{}
 	// get document ids for each query words
 	for _, word := range words {
+		// lowercase the word, so we could do insensitive
+		// case search
+		word = strings.ToLower(word)
 		// if word is excluded word just continue
 		_, excluded := i.excludeWordMap[word]
 		if excluded {

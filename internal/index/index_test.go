@@ -7,6 +7,7 @@ import (
 
 	"pulley.com/shakesearch/internal/errs"
 	"pulley.com/shakesearch/internal/index"
+	"pulley.com/shakesearch/internal/query"
 )
 
 // this standard stopwords from lucene index for english language
@@ -22,11 +23,11 @@ var stopWords = []string{
 func TestNormalSearch(t *testing.T) {
 	// initialize documents to be indexed
 	docs := []index.Document{
-		&mockDocument{data: "hello world this is document 0"},
-		&mockDocument{data: "cat is currently walking this is document 1 fish cat fly cat"},
-		&mockDocument{data: "you know why we have this document this is document 2"},
-		&mockDocument{data: "i'm fan of cat steven this is document 3"},
-		&mockDocument{data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+		&mockDocument{data: "Hello, World! This is document 0."},
+		&mockDocument{data: "Cat is currently walking! This is document 1! Fish cat fly cat."},
+		&mockDocument{data: "You know why we have this document? This is document 2."},
+		&mockDocument{data: "I'm fan of Cat Steven! This is document 3."},
+		&mockDocument{data: "Perhaps I'm no longer exists maybe as cat guarding cat. This is document 4."},
 	}
 	// initialize index
 	idx, err := index.New(
@@ -88,11 +89,11 @@ func TestNormalSearch(t *testing.T) {
 func TestPageNotFoundSearch(t *testing.T) {
 	// initialize documents to be indexed
 	docs := []index.Document{
-		&mockDocument{data: "hello world this is document 0"},
-		&mockDocument{data: "cat is currently walking this is document 1 fish cat fly cat"},
-		&mockDocument{data: "you know why we have this document this is document 2"},
-		&mockDocument{data: "i'm fan of cat steven this is document 3"},
-		&mockDocument{data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+		&mockDocument{data: "Hello, World! This is document 0."},
+		&mockDocument{data: "Cat is currently walking! This is document 1! Fish cat fly cat."},
+		&mockDocument{data: "You know why we have this document? This is document 2."},
+		&mockDocument{data: "I'm fan of Cat Steven! This is document 3."},
+		&mockDocument{data: "Perhaps I'm no longer exists maybe as cat guarding cat. This is document 4."},
 	}
 	// initialize index
 	idx, err := index.New(
@@ -118,11 +119,11 @@ func TestPageNotFoundSearch(t *testing.T) {
 func TestNoResultSearch(t *testing.T) {
 	// initialize documents to be indexed
 	docs := []index.Document{
-		&mockDocument{data: "hello world this is document 0"},
-		&mockDocument{data: "cat is currently walking this is document 1 fish cat fly cat"},
-		&mockDocument{data: "you know why we have this document this is document 2"},
-		&mockDocument{data: "i'm fan of cat steven this is document 3"},
-		&mockDocument{data: "perhaps i'm no longer exists maybe as cat guarding cat"},
+		&mockDocument{data: "Hello, World! This is document 0."},
+		&mockDocument{data: "Cat is currently walking! This is document 1! Fish cat fly cat."},
+		&mockDocument{data: "You know why we have this document? This is document 2."},
+		&mockDocument{data: "I'm fan of Cat Steven! This is document 3."},
+		&mockDocument{data: "Perhaps I'm no longer exists maybe as cat guarding cat. This is document 4."},
 	}
 	// initialize index
 	idx, err := index.New(
@@ -172,7 +173,7 @@ func (d *mockDocument) GetID() int {
 }
 
 func (d *mockDocument) GetWords() []string {
-	return strings.Split(d.data, " ")
+	return query.Query(d.data).GetWords()
 }
 
 func (d *mockDocument) GetData() string {
