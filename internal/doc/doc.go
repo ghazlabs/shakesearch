@@ -107,7 +107,7 @@ func (d *Document) GetShortHTML(queryString string) string {
 	for i := 0; i < len(lineIdxs); i++ {
 		currentIdx := lineIdxs[i]
 		currentLine := strings.TrimSpace(d.lines[currentIdx])
-		if currentIdx == 0 || currentIdx-1 == prevIdx {
+		if i == 0 || currentIdx-1 == prevIdx {
 			pBuilder.WriteString(currentLine)
 		} else {
 			pBuilder.WriteString("... " + currentLine)
@@ -121,11 +121,8 @@ func (d *Document) GetShortHTML(queryString string) string {
 	if len([]rune(dataHTML)) > maxShortChars {
 		dataHTML = string([]rune(dataHTML)[:maxShortChars]) + "..."
 	}
-	for _, word := range words {
-		dataHTML = strings.ReplaceAll(dataHTML, word, d.shortTag.Start+word+d.shortTag.End)
-	}
-
-	return dataHTML
+	// warp every words appears in paragraph by tag
+	return warpWordsByTag(dataHTML, d.shortTag, words)
 }
 
 // GetHighlightedHTML returns full document data, but for
@@ -135,19 +132,7 @@ func (d *Document) GetHighlightedHTML(queryString string) string {
 	// breakdown query into words
 	words := query.Query(queryString).GetUniqueWords()
 	// wrap every words with highlight tag
-	dataHTML := d.data
-	for _, word := range words {
-		regex := buildMatchAnyCasePattern(word)
-		foundWords := regex.FindAllString(dataHTML, -1)
-		foundWordMap := map[string]struct{}{}
-		for _, uw := range foundWords {
-			foundWordMap[uw] = struct{}{}
-		}
-		for foundWord := range foundWordMap {
-			dataHTML = strings.ReplaceAll(dataHTML, foundWord, d.highlightTag.Start+foundWord+d.highlightTag.End)
-		}
-	}
-	return dataHTML
+	return warpWordsByTag(d.data, d.highlightTag, words)
 }
 
 func buildMatchAnyCasePattern(word string) *regexp.Regexp {
@@ -156,4 +141,20 @@ func buildMatchAnyCasePattern(word string) *regexp.Regexp {
 		patternBuilder.WriteString("(" + strings.ToLower(string(c)) + "|" + strings.ToUpper(string(c)) + ")")
 	}
 	return regexp.MustCompile(patternBuilder.String())
+}
+
+func warpWordsByTag(text string, tag Tag, words []string) string {
+	dataHTML := text
+	for _, word := range words {
+		regex := buildMatchAnyCasePattern(word)
+		foundWords := regex.FindAllString(dataHTML, -1)
+		foundWordMap := map[string]struct{}{}
+		for _, uw := range foundWords {
+			foundWordMap[uw] = struct{}{}
+		}
+		for foundWord := range foundWordMap {
+			dataHTML = strings.ReplaceAll(dataHTML, foundWord, tag.Start+foundWord+tag.End)
+		}
+	}
+	return dataHTML
 }

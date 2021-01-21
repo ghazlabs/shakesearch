@@ -98,7 +98,7 @@ func TestGetShortHTML(t *testing.T) {
 				THE TRAGEDY OF KING LEAR
 			`,
 			Query:     "King Henry",
-			ExpResult: "THE FIRST PART OF <b>KING</b> <b>HENRY</b> THE FOURTH THE SECOND PART OF <b>KING</b> <b>HENRY</b> THE FOURTH THE LIFE OF <b>KING</b> <b>HENRY</b> THE FIFTH THE FIRST PART OF <b>HENRY</b> THE SIXTH THE SECOND PART OF KIN...",
+			ExpResult: "THE FIRST PART OF <b>KING</b> <b>HENRY</b> THE FOURTH ... THE SECOND PART OF <b>KING</b> <b>HENRY</b> THE FOURTH ... THE LIFE OF <b>KING</b> <b>HENRY</b> THE FIFTH ... THE FIRST PART OF <b>HENRY</b> THE SIXTH ... THE SE...",
 		},
 		{
 			Name: "Test More Than Two Words Query",
@@ -137,7 +137,7 @@ func TestGetShortHTML(t *testing.T) {
 				ANTONY.
 				Fulvia is dead.			
 			`,
-			Query:     "Cleoparta dies instantly",
+			Query:     "Cleopatra dies instantly",
 			ExpResult: "esteemed nothing. <b>Cleopatra</b>, catching but the least noise of this, <b>dies</b> <b>instantly</b>. I have seen her die twenty times upon far poorer moment. I",
 		},
 	}
