@@ -101,7 +101,7 @@ func TestGetShortHTML(t *testing.T) {
 			ExpResult: "THE FIRST PART OF <b>KING</b> <b>HENRY</b> THE FOURTH THE SECOND PART OF <b>KING</b> <b>HENRY</b> THE FOURTH THE LIFE OF <b>KING</b> <b>HENRY</b> THE FIFTH THE FIRST PART OF <b>HENRY</b> THE SIXTH THE SECOND PART OF KIN...",
 		},
 		{
-			Name: "Test More Than One Words Query",
+			Name: "Test More Than Two Words Query",
 			Text: `
 				ENOBARBUS.
 				Under a compelling occasion, let women die. It were pity to cast them
@@ -142,24 +142,26 @@ func TestGetShortHTML(t *testing.T) {
 		},
 	}
 	for _, testCase := range testCases {
-		// initialize document
-		d, err := doc.New(
-			doc.Configs{
-				Lines: strings.Split(testCase.Text, "\n"),
-				ShortTag: doc.Tag{
-					Start: "<b>",
-					End:   "</b>",
+		t.Run(testCase.Name, func(t *testing.T) {
+			// initialize document
+			d, err := doc.New(
+				doc.Configs{
+					Lines: strings.Split(testCase.Text, "\n"),
+					ShortTag: doc.Tag{
+						Start: "<b>",
+						End:   "</b>",
+					},
 				},
-			},
-		)
-		if err != nil {
-			t.Fatalf("unable to initialize new document due: %v", err)
-		}
-		// get short html
-		result := d.GetShortHTML(testCase.Query)
-		if result != testCase.ExpResult {
-			t.Fatalf("unexpected result, exp: %v, got: %v", testCase.ExpResult, result)
-		}
+			)
+			if err != nil {
+				t.Fatalf("unable to initialize new document due: %v", err)
+			}
+			// get short html
+			result := d.GetShortHTML(testCase.Query)
+			if result != testCase.ExpResult {
+				t.Fatalf("unexpected result, exp: %v, got: %v", testCase.ExpResult, result)
+			}
+		})
 	}
 }
 
@@ -171,6 +173,12 @@ func TestGetHighlightedHTML(t *testing.T) {
 		Query     string
 		ExpResult string
 	}{
+		{
+			Name:      "Test No Highlight",
+			Text:      "Hello my name is Nino! How are you?",
+			Query:     "Shino",
+			ExpResult: "Hello my name is Nino! How are you?",
+		},
 		{
 			Name:      "Test Any Case Highlighted",
 			Text:      "King kING KING kIng",

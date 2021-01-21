@@ -1,7 +1,6 @@
 package doc
 
 import (
-	"log"
 	"regexp"
 	"sort"
 	"strings"
@@ -17,7 +16,6 @@ type Document struct {
 	data         string
 	shortTag     Tag
 	highlightTag Tag
-	wordMap      map[string][]int
 	lines        []string
 }
 
@@ -30,26 +28,11 @@ type Configs struct {
 
 // New returns new instance of Document
 func New(c Configs) (*Document, error) {
-	// construct word map
-	wordMap := map[string][]int{}
-	for i := 0; i < len(c.Lines); i++ {
-		currentLine := c.Lines[i]
-		words := query.Query(currentLine).GetWords()
-		for _, word := range words {
-			v, ok := wordMap[word]
-			if !ok {
-				v = []int{}
-			}
-			v = append(v, i)
-			wordMap[word] = v
-		}
-	}
 	// construct documents
 	doc := &Document{
 		data:         strings.Join(c.Lines, "\n"),
 		shortTag:     c.ShortTag,
 		highlightTag: c.HighlightTag,
-		wordMap:      wordMap,
 		lines:        c.Lines,
 	}
 	return doc, nil
@@ -97,13 +80,15 @@ func (d *Document) GetShortHTML(queryString string) string {
 	// find the lines for each words
 	lineMap := map[int]struct{}{}
 	for _, word := range words {
-		lineIdxs := d.wordMap[word]
-		for _, lineIdx := range lineIdxs {
-			lineMap[lineIdx] = struct{}{}
+		regex := buildMatchAnyCasePattern(word)
+		for i := 0; i < len(d.lines); i++ {
+			if !regex.MatchString(d.lines[i]) {
+				continue
+			}
+			lineMap[i] = struct{}{}
 		}
 	}
 	// if no line found, returns empty string
-	log.Printf("[RDebug] lineMap: %+v", lineMap)
 	if len(lineMap) == 0 {
 		return ""
 	}
@@ -118,21 +103,23 @@ func (d *Document) GetShortHTML(queryString string) string {
 	})
 	// merge lines into paragraph
 	pBuilder := &strings.Builder{}
-	pBuilder.WriteString(d.lines[0])
 	prevIdx := 0
-	for i := 1; i < len(lineIdxs); i++ {
+	for i := 0; i < len(lineIdxs); i++ {
 		currentIdx := lineIdxs[i]
-		currentLine := d.lines[currentIdx]
-		if currentIdx == prevIdx-1 {
+		currentLine := strings.TrimSpace(d.lines[currentIdx])
+		if currentIdx == 0 || currentIdx-1 == prevIdx {
 			pBuilder.WriteString(currentLine)
 		} else {
 			pBuilder.WriteString("... " + currentLine)
 		}
+		if i < len(lineIdxs)-1 {
+			pBuilder.WriteString(" ")
+		}
 		prevIdx = currentIdx
 	}
 	dataHTML := pBuilder.String()
-	if len(dataHTML) > maxShortChars {
-		dataHTML = dataHTML[:maxShortChars] + "..."
+	if len([]rune(dataHTML)) > maxShortChars {
+		dataHTML = string([]rune(dataHTML)[:maxShortChars]) + "..."
 	}
 	for _, word := range words {
 		dataHTML = strings.ReplaceAll(dataHTML, word, d.shortTag.Start+word+d.shortTag.End)
@@ -150,11 +137,7 @@ func (d *Document) GetHighlightedHTML(queryString string) string {
 	// wrap every words with highlight tag
 	dataHTML := d.data
 	for _, word := range words {
-		patternBuilder := &strings.Builder{}
-		for _, c := range word {
-			patternBuilder.WriteString("(" + strings.ToLower(string(c)) + "|" + strings.ToUpper(string(c)) + ")")
-		}
-		regex := regexp.MustCompile(patternBuilder.String())
+		regex := buildMatchAnyCasePattern(word)
 		foundWords := regex.FindAllString(dataHTML, -1)
 		foundWordMap := map[string]struct{}{}
 		for _, uw := range foundWords {
@@ -165,4 +148,12 @@ func (d *Document) GetHighlightedHTML(queryString string) string {
 		}
 	}
 	return dataHTML
+}
+
+func buildMatchAnyCasePattern(word string) *regexp.Regexp {
+	patternBuilder := &strings.Builder{}
+	for _, c := range word {
+		patternBuilder.WriteString("(" + strings.ToLower(string(c)) + "|" + strings.ToUpper(string(c)) + ")")
+	}
+	return regexp.MustCompile(patternBuilder.String())
 }
