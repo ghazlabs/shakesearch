@@ -27,3 +27,17 @@ func (q Query) GetWords() []string {
 	}
 	return filteredWords
 }
+
+// GetUniqueWords returns list of unique words
+func (q Query) GetUniqueWords() []string {
+	wordMap := map[string]struct{}{}
+	words := q.GetWords()
+	for _, word := range words {
+		wordMap[word] = struct{}{}
+	}
+	uniqueWords := make([]string, 0, len(words))
+	for word := range wordMap {
+		uniqueWords = append(uniqueWords, word)
+	}
+	return uniqueWords
+}

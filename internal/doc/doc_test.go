@@ -208,7 +208,17 @@ func TestGetHighlightedHTML(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.Name, func(t *testing.T) {
 			// initialize document
-			d, err := doc.New(doc.Configs{})
+			d, err := doc.New(doc.Configs{
+				Lines: strings.Split(testCase.Text, "\n"),
+				HighlightTag: doc.Tag{
+					Start: `<span style="highlight">`,
+					End:   `</span>`,
+				},
+				ShortTag: doc.Tag{
+					Start: `<b>`,
+					End:   `</b>`,
+				},
+			})
 			if err != nil {
 				t.Fatalf("unable to initialize document due: %v", err)
 			}

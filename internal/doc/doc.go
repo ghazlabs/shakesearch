@@ -1,6 +1,8 @@
 package doc
 
 import (
+	"log"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -101,6 +103,7 @@ func (d *Document) GetShortHTML(queryString string) string {
 		}
 	}
 	// if no line found, returns empty string
+	log.Printf("[RDebug] lineMap: %+v", lineMap)
 	if len(lineMap) == 0 {
 		return ""
 	}
@@ -143,11 +146,23 @@ func (d *Document) GetShortHTML(queryString string) string {
 // highlight html tag
 func (d *Document) GetHighlightedHTML(queryString string) string {
 	// breakdown query into words
-	words := query.Query(queryString).GetWords()
+	words := query.Query(queryString).GetUniqueWords()
 	// wrap every words with highlight tag
 	dataHTML := d.data
 	for _, word := range words {
-		dataHTML = strings.ReplaceAll(dataHTML, word, d.highlightTag.Start+word+d.highlightTag.End)
+		patternBuilder := &strings.Builder{}
+		for _, c := range word {
+			patternBuilder.WriteString("(" + strings.ToLower(string(c)) + "|" + strings.ToUpper(string(c)) + ")")
+		}
+		regex := regexp.MustCompile(patternBuilder.String())
+		foundWords := regex.FindAllString(dataHTML, -1)
+		foundWordMap := map[string]struct{}{}
+		for _, uw := range foundWords {
+			foundWordMap[uw] = struct{}{}
+		}
+		for foundWord := range foundWordMap {
+			dataHTML = strings.ReplaceAll(dataHTML, foundWord, d.highlightTag.Start+foundWord+d.highlightTag.End)
+		}
 	}
 	return dataHTML
 }
