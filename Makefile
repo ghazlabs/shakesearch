@@ -1,7 +1,7 @@
 .PHONY: build
 
 build:
-	docker build -t shakesearch -f ./build/package/search/Dockerfile .
+	docker build -t shakesearch .
 run:
 	make build
 	docker run --rm \
