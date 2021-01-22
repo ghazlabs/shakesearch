@@ -5,7 +5,11 @@ var app = new Vue({
         relevants: [],
         current_page: 1,
         prev_page: null,
-        next_page: null
+        next_page: null,
+        current_doc_page: null,
+        prev_doc_page: null,
+        next_doc_page: null,
+        doc_data: ""
     },
     methods: {
         async search() {
@@ -32,6 +36,22 @@ var app = new Vue({
         async prevSearch() {
             this.current_page = this.prev_page;
             await this.search();
+        },
+        async openDocPage(id) {
+            try {
+                // fetch page data
+                const response = await fetch(`/pages/${id}?q=${this.search_query}`);
+                const result = await response.json();
+                // set doc state
+                this.current_doc_page = result.data.current_page;
+                this.next_doc_page = result.data.next_page;
+                this.prev_doc_page = result.data.prev_page;
+                this.doc_data = result.data.body_html;
+                // open modal
+                $('#modal').addClass('is-active');
+            } catch($e) {
+                console.log($e);
+            }
         }
     }
 });

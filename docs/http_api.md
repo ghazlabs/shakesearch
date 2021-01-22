@@ -41,14 +41,14 @@ GET /search?q=Hamlet+special
         "data": {
             "relevants": [
                 {
+                    "id": 123,
                     "title": "Page 123",
-                    "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just...",
-                    "url": "/pages/123?q=Hamlet+special"
+                    "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just..."
                 },
                 {
+                    "id": 743,
                     "title": "Page 743",
-                    "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?",
-                    "url": "/pages/743?q=Hamlet+special"
+                    "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?"
                 }
             ],
             "current_page": 1,

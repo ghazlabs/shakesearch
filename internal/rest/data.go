@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 
 	"pulley.com/shakesearch/internal/errs"
 	"pulley.com/shakesearch/internal/index"
@@ -56,9 +55,9 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 	searchRelevants := make([]searchRelevant, 0, len(result.Relevants))
 	for _, doc := range result.Relevants {
 		searchRelevants = append(searchRelevants, searchRelevant{
+			ID:        doc.GetID() + 1,
 			Title:     fmt.Sprintf("Page %v", doc.GetID()+1),
 			ShortHTML: doc.GetShortHTML(queryString),
-			URL:       fmt.Sprintf("/pages/%v?q=%v", doc.GetID()+1, url.QueryEscape(queryString)),
 		})
 	}
 	d := &searchData{
@@ -78,9 +77,9 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 }
 
 type searchRelevant struct {
+	ID        int    `json:"id"`
 	Title     string `json:"title"`
 	ShortHTML string `json:"short_html"`
-	URL       string `json:"url"`
 }
 
 type viewPageData struct {
