@@ -7,6 +7,8 @@ import (
 	"pulley.com/shakesearch/internal/doc"
 )
 
+const maxShortChars = 170
+
 func TestGetShortHTML(t *testing.T) {
 	// define test cases
 	testCases := []struct {
@@ -151,6 +153,7 @@ func TestGetShortHTML(t *testing.T) {
 						Start: "<b>",
 						End:   "</b>",
 					},
+					MaxShortChars: maxShortChars,
 				},
 			)
 			if err != nil {
@@ -226,6 +229,7 @@ func TestGetHighlightedHTML(t *testing.T) {
 					Start: `<b>`,
 					End:   `</b>`,
 				},
+				MaxShortChars: maxShortChars,
 			})
 			if err != nil {
 				t.Fatalf("unable to initialize document due: %v", err)

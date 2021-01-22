@@ -15,80 +15,72 @@
         #modal_footer {
             justify-content: space-between;
         }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
-    <section class="section">
-        <div class="container">
-            <div class="has-text-centered">
-                <p class="title is-size-4">ShakeSearch</p>
-                <p class="subtitle is-size-6">Search on Shakespeare's works</p>
+    <div v-cloak id="app">
+        <section class="section">
+            <div class="container">
+                <div class="has-text-centered">
+                    <p class="title is-size-4">ShakeSearch</p>
+                    <p class="subtitle is-size-6">Search on Shakespeare's works</p>
+                </div>
+                <br>
+                <form action="#" v-on:submit.prevent="initSearch()">
+                    <div class="field has-addons">
+                        <p class="control is-expanded">
+                            <input v-model="search_query" class="input" type="text" placeholder="Type something here..."
+                                required autofocus>
+                        </p>
+                        <p class="control">
+                            <button class="button is-info">
+                                Search
+                            </button>
+                        </p>
+                    </div>
+                </form>
             </div>
-            <br>
-            <form action="#">
-                <div class="field has-addons">
-                    <p class="control is-expanded">
-                        <input class="input" type="text" placeholder="Type something here..." required autofocus>
-                    </p>
-                    <p class="control">
-                        <button class="button is-info">
-                            Search
-                        </button>
-                    </p>
-                </div>
-            </form>
-        </div>
-        <br><br>
-        <div class="container">
-            <ul>
-                <li>
-                    <div class="item">
-                        <p class="title is-size-4"><a href="#" class="trigger-modal">Page 506</a></p>
-                        <p>
-                            His father and I were soldiers <b>together</b>, to whom I have been often ... Sir, we have
-                            known <b>together</b> in Orleans. ... countryman and you; it had been pity you should have
-                            be...
-                        </p>
-                        <hr>
+            <br><br>
+            <div class="container">
+                <ul>
+                    <li v-for="relevant in relevants">
+                        <div class="item">
+                            <p class="title is-size-4"><a href="#" class="trigger-modal">{{ relevant.title }}</a></p>
+                            <p v-html="relevant.short_html"></p>
+                            <hr>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="container">
+                <div class="level is-mobile">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <a href="#" v-if="prev_page" v-on:click.prevent="prevSearch()">← Prev</a>
+                        </div>
                     </div>
-                </li>
-                <li>
-                    <div class="item">
-                        <p class="title is-size-4"><a href="#" class="trigger-modal">Page 1307</a></p>
-                        <p>
-                            BLANCH. There where my fortune lives, there my life <b>dies</b>. KING JOHN. Cousin, go draw
-                            our puissance <b>together</b>.
-                        </p>
-                        <hr>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="container">
-            <div class="level is-mobile">
-                <div class="level-left">
-                    <div class="level-item">
-                        <a href="#">← Prev</a>
-                    </div>
-                </div>
-                <div class="level-right">
-                    <div class="level-item">
-                        <a href="#">Next →</a>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a href="#" v-if="next_page" v-on:click.prevent="nextSearch()">Next →</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="modal" class="modal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Page 506</p>
-                    <button class="delete trigger-modal" aria-label="close"></button>
-                </header>
-                <section class="modal-card-body">
-                    <div class="content">
-                        <pre>
+            <div id="modal" class="modal">
+                <div class="modal-background"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Page 506</p>
+                        <button class="delete trigger-modal" aria-label="close"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="content">
+                            <pre>
 admiration, though the catalogue of his endowments had been tabled by
 his side, and I to peruse him by items.
 
@@ -140,25 +132,28 @@ countryman and you; it had been pity you should have been put <mark>together</ma
 with so mortal a purpose as then each bore, upon importance of so
 slight and trivial a nature.
                         </pre>
-                    </div>
-                </section>
-                <footer id="modal_footer" class="modal-card-foot is-mobile">
-                    <div class="level-left">
-                        <div class="level-item">
-                            <a href="#">← 507</a>
                         </div>
-                    </div>
-                    <div class="level-right">
-                        <div class="level-item">
-                            <a href="#">508 →</a>
+                    </section>
+                    <footer id="modal_footer" class="modal-card-foot is-mobile">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <a href="#">← 507</a>
+                            </div>
                         </div>
-                    </div>
-                </footer>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <a href="#">508 →</a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script src="app.js"></script>
     <script>
         $('.trigger-modal').click(function (e) {
             e.preventDefault();

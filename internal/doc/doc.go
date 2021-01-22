@@ -8,32 +8,33 @@ import (
 	"pulley.com/shakesearch/internal/query"
 )
 
-const maxShortChars = 170
-
 // Document represents document that will be indexed
 type Document struct {
-	id           int
-	data         string
-	shortTag     Tag
-	highlightTag Tag
-	lines        []string
+	id            int
+	data          string
+	shortTag      Tag
+	highlightTag  Tag
+	lines         []string
+	maxShortChars int
 }
 
 // Configs represents configs for Document
 type Configs struct {
-	Lines        []string
-	ShortTag     Tag
-	HighlightTag Tag
+	Lines         []string
+	ShortTag      Tag
+	HighlightTag  Tag
+	MaxShortChars int
 }
 
 // New returns new instance of Document
 func New(c Configs) (*Document, error) {
 	// construct documents
 	doc := &Document{
-		data:         strings.Join(c.Lines, "\n"),
-		shortTag:     c.ShortTag,
-		highlightTag: c.HighlightTag,
-		lines:        c.Lines,
+		data:          strings.Join(c.Lines, "\n"),
+		shortTag:      c.ShortTag,
+		highlightTag:  c.HighlightTag,
+		lines:         c.Lines,
+		maxShortChars: c.MaxShortChars,
 	}
 	return doc, nil
 }
@@ -118,8 +119,8 @@ func (d *Document) GetShortHTML(queryString string) string {
 		prevIdx = currentIdx
 	}
 	dataHTML := pBuilder.String()
-	if len([]rune(dataHTML)) > maxShortChars {
-		dataHTML = string([]rune(dataHTML)[:maxShortChars]) + "..."
+	if len([]rune(dataHTML)) > d.maxShortChars {
+		dataHTML = string([]rune(dataHTML)[:d.maxShortChars]) + "..."
 	}
 	// warp every words appears in paragraph by tag
 	return warpWordsByTag(dataHTML, d.shortTag, words)

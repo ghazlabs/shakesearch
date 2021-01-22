@@ -16,6 +16,7 @@ import (
 
 const (
 	maxLinesInPage        = 50
+	maxShortChars         = 300
 	searchResultPageLimit = 10
 )
 
@@ -62,9 +63,10 @@ func main() {
 			endIdx = len(lines)
 		}
 		d, err := doc.New(doc.Configs{
-			Lines:        lines[startIdx:endIdx],
-			ShortTag:     shortTag,
-			HighlightTag: highlightTag,
+			Lines:         lines[startIdx:endIdx],
+			ShortTag:      shortTag,
+			HighlightTag:  highlightTag,
+			MaxShortChars: maxShortChars,
 		})
 		if err != nil {
 			log.Fatalf("unable to create new doc due: %v", err)
