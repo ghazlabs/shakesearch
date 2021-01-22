@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 
 	"pulley.com/shakesearch/internal/errs"
 	"pulley.com/shakesearch/internal/index"
@@ -46,6 +47,8 @@ func newErrResp(err error) *apiResp {
 type searchData struct {
 	Relevants   []searchRelevant `json:"relevants"`
 	CurrentPage int              `json:"current_page"`
+	PrevPage    *int             `json:"prev_page"`
+	NextPage    *int             `json:"next_page"`
 	TotalPages  int              `json:"total_pages"`
 }
 
@@ -55,14 +58,23 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 		searchRelevants = append(searchRelevants, searchRelevant{
 			Title:     fmt.Sprintf("Page %v", doc.GetID()+1),
 			ShortHTML: doc.GetShortHTML(queryString),
-			URL:       fmt.Sprintf("/pages/%v?q=%v", doc.GetID()+1, queryString),
+			URL:       fmt.Sprintf("/pages/%v?q=%v", doc.GetID()+1, url.QueryEscape(queryString)),
 		})
 	}
-	return &searchData{
+	d := &searchData{
 		Relevants:   searchRelevants,
 		CurrentPage: currentPage,
 		TotalPages:  result.TotalPages,
 	}
+	if currentPage != 1 {
+		prevPage := currentPage - 1
+		d.PrevPage = &prevPage
+	}
+	if currentPage != result.TotalPages {
+		nextPage := currentPage + 1
+		d.NextPage = &nextPage
+	}
+	return d
 }
 
 type searchRelevant struct {

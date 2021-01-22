@@ -52,6 +52,8 @@ GET /search?q=Hamlet+special
                 }
             ],
             "current_page": 1,
+            "prev_page": null,
+            "next_page": 1,
             "total_pages": 10
         }
     }
