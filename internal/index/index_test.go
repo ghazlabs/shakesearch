@@ -32,9 +32,9 @@ func TestNormalSearch(t *testing.T) {
 	// initialize index
 	idx, err := index.New(
 		index.Configs{
-			Documents:     docs,
-			ExcludedWords: stopWords,
-			PageLimit:     2,
+			Documents:       docs,
+			ExcludedWords:   stopWords,
+			ResultPageLimit: 2,
 		},
 	)
 	if err != nil {
@@ -98,9 +98,9 @@ func TestPageNotFoundSearch(t *testing.T) {
 	// initialize index
 	idx, err := index.New(
 		index.Configs{
-			Documents:     docs,
-			ExcludedWords: stopWords,
-			PageLimit:     2,
+			Documents:       docs,
+			ExcludedWords:   stopWords,
+			ResultPageLimit: 2,
 		},
 	)
 	if err != nil {
@@ -128,9 +128,9 @@ func TestNoResultSearch(t *testing.T) {
 	// initialize index
 	idx, err := index.New(
 		index.Configs{
-			Documents:     docs,
-			ExcludedWords: stopWords,
-			PageLimit:     2,
+			Documents:       docs,
+			ExcludedWords:   stopWords,
+			ResultPageLimit: 2,
 		},
 	)
 	if err != nil {

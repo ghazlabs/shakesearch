@@ -13,14 +13,14 @@ type Index struct {
 	docs            []Document
 	revIndexWordMap map[string][]int
 	excludeWordMap  map[string]struct{}
-	pageLimit       int
+	resultPageLimit int
 }
 
 // Configs holds configs for Index
 type Configs struct {
-	Documents     []Document
-	ExcludedWords []string
-	PageLimit     int
+	Documents       []Document
+	ExcludedWords   []string
+	ResultPageLimit int
 }
 
 // New returns new instance of Index
@@ -61,7 +61,7 @@ func New(configs Configs) (*Index, error) {
 		docs:            configs.Documents,
 		revIndexWordMap: revIndexMap,
 		excludeWordMap:  excludeWordMap,
-		pageLimit:       configs.PageLimit,
+		resultPageLimit: configs.ResultPageLimit,
 	}
 	return &i, nil
 }
@@ -103,7 +103,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	// if totalPages is zero, returns empty list and set total pages to 1
 	// notice that we set the total pages into 1 because logically we want
 	// to show the empty result in first page
-	totalPages := int(math.Ceil(float64(len(tupples)) / float64(i.pageLimit)))
+	totalPages := int(math.Ceil(float64(len(tupples)) / float64(i.resultPageLimit)))
 	if totalPages == 0 && page == 0 {
 		return &SearchResult{Relevants: nil, TotalPages: 1}, nil
 	}
@@ -112,8 +112,8 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 		return nil, errs.NewErrPageNotFound()
 	}
 	// select the elements for given page
-	startIdx := page * i.pageLimit
-	endIdx := startIdx + i.pageLimit
+	startIdx := page * i.resultPageLimit
+	endIdx := startIdx + i.resultPageLimit
 	if endIdx >= len(tupples) {
 		endIdx = len(tupples)
 	}

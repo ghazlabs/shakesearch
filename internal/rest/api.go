@@ -13,11 +13,11 @@ import (
 
 // API is used for handling http api requests
 type API struct {
-	idx index.Index
+	idx *index.Index
 }
 
 // New returns new instance of API
-func New(idx index.Index) *API {
+func New(idx *index.Index) *API {
 	return &API{idx: idx}
 }
 
