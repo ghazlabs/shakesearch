@@ -58,8 +58,8 @@ func main() {
 	for i := 0; i < countDocs; i++ {
 		startIdx := i * maxLinesInPage
 		endIdx := startIdx + maxLinesInPage
-		if endIdx > countDocs {
-			endIdx = countDocs
+		if endIdx > len(lines) {
+			endIdx = len(lines)
 		}
 		d, err := doc.New(doc.Configs{
 			Lines:        lines[startIdx:endIdx],

@@ -12,7 +12,7 @@ import (
 type apiResp struct {
 	Status  int         `json:"-"`
 	OK      bool        `json:"ok"`
-	Data    interface{} `json:"data.omitempty"`
+	Data    interface{} `json:"data,omitempty"`
 	ErrCode string      `json:"err,omitempty"`
 }
 
@@ -53,6 +53,7 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 	searchRelevants := make([]searchRelevant, 0, len(result.Relevants))
 	for _, doc := range result.Relevants {
 		searchRelevants = append(searchRelevants, searchRelevant{
+			Title:     fmt.Sprintf("Page %v", doc.GetID()),
 			ShortHTML: doc.GetShortHTML(queryString),
 			URL:       fmt.Sprintf("/pages/%v?q=%v", doc.GetID(), queryString),
 		})
@@ -65,6 +66,7 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 }
 
 type searchRelevant struct {
+	Title     string `json:"title"`
 	ShortHTML string `json:"short_html"`
 	URL       string `json:"url"`
 }
