@@ -92,7 +92,7 @@ func main() {
 		port = defaultPort
 	}
 	server := &http.Server{
-		Addr:        fmt.Sprintf(":%v", defaultPort),
+		Addr:        fmt.Sprintf(":%v", port),
 		Handler:     api.GetHandler(),
 		ReadTimeout: 3 * time.Second,
 	}
