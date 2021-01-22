@@ -6,6 +6,8 @@ COPY ./internal/ ./internal/
 COPY go.mod .
 COPY go.sum .
 
+RUN CGO_ENABLED=0 go test -v -count=1 ./...
+
 WORKDIR /go/src/github.com/ProlificLabs/shakesearch/cmd/search
 RUN go build -o app
 

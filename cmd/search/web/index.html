@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShakeSearch - Search on Shakespeare's works</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <style>
+        p.title>a:hover {
+            color: #3273dc;
+            text-decoration: underline;
+        }
+
+        #modal_footer {
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="section">
+        <div class="container">
+            <div class="has-text-centered">
+                <p class="title is-size-4">ShakeSearch</p>
+                <p class="subtitle is-size-6">Search on Shakespeare's works</p>
+            </div>
+            <br>
+            <div class="field has-addons">
+                <p class="control is-expanded">
+                    <input class="input" type="text" placeholder="Type something here..." autofocus>
+                </p>
+                <p class="control">
+                    <button class="button is-info">
+                        Search
+                    </button>
+                </p>
+            </div>
+        </div>
+        <br><br>
+        <div class="container">
+            <ul>
+                <li>
+                    <div class="item">
+                        <p class="title is-size-4"><a href="#" class="trigger-modal">Page 506</a></p>
+                        <p>
+                            His father and I were soldiers <b>together</b>, to whom I have been often ... Sir, we have
+                            known <b>together</b> in Orleans. ... countryman and you; it had been pity you should have
+                            be...
+                        </p>
+                        <hr>
+                    </div>
+                </li>
+                <li>
+                    <div class="item">
+                        <p class="title is-size-4"><a href="#" class="trigger-modal">Page 1307</a></p>
+                        <p>
+                            BLANCH. There where my fortune lives, there my life <b>dies</b>. KING JOHN. Cousin, go draw
+                            our puissance <b>together</b>.
+                        </p>
+                        <hr>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="level is-mobile">
+                <div class="level-left">
+                    <div class="level-item">
+                        <a href="#">← Prev</a>
+                    </div>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <a href="#">Next →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Page 506</p>
+                    <button class="delete trigger-modal" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="content">
+                        <pre>
+admiration, though the catalogue of his endowments had been tabled by
+his side, and I to peruse him by items.
+
+PHILARIO.
+You speak of him when he was less furnish’d than now he is with that
+which makes him both without and within.
+
+FRENCHMAN.
+I have seen him in France; we had very many there could behold the sun
+with as firm eyes as he.
+
+IACHIMO.
+This matter of marrying his king’s daughter, wherein he must be weighed
+rather by her value than his own, words him, I doubt not, a great deal
+from the matter.
+
+FRENCHMAN.
+And then his banishment.
+
+IACHIMO.
+Ay, and the approbation of those that weep this lamentable divorce
+under her colours are wonderfully to extend him, be it but to fortify
+her judgement, which else an easy battery might lay flat, for taking a
+beggar, without less quality. But how comes it he is to sojourn with
+you? How creeps acquaintance?
+
+PHILARIO.
+His father and I were soldiers <mark>together</mark>, to whom I have been often
+bound for no less than my life.
+
+    Enter Posthumus.
+
+Here comes the Briton. Let him be so entertained amongst you as suits
+with gentlemen of your knowing to a stranger of his quality. I beseech
+you all be better known to this gentleman, whom I commend to you as a
+noble friend of mine. How worthy he is I will leave to appear
+hereafter, rather than story him in his own hearing.
+
+FRENCHMAN.
+Sir, we have known <mark>together</mark> in Orleans.
+
+POSTHUMUS.
+Since when I have been debtor to you for courtesies, which I will be
+ever to pay and yet pay still.
+
+FRENCHMAN.
+Sir, you o’errate my poor kindness. I was glad I did atone my
+countryman and you; it had been pity you should have been put <mark>together</mark>
+with so mortal a purpose as then each bore, upon importance of so
+slight and trivial a nature.
+                        </pre>
+                    </div>
+                </section>
+                <footer id="modal_footer" class="modal-card-foot is-mobile">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <a href="#">← 507</a>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a href="#">508 →</a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script>
+        $('.trigger-modal').click(function (e) {
+            e.preventDefault();
+            $('#modal').toggleClass('is-active');
+        });
+    </script>
+</body>
+
+</html>

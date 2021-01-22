@@ -53,9 +53,9 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 	searchRelevants := make([]searchRelevant, 0, len(result.Relevants))
 	for _, doc := range result.Relevants {
 		searchRelevants = append(searchRelevants, searchRelevant{
-			Title:     fmt.Sprintf("Page %v", doc.GetID()),
+			Title:     fmt.Sprintf("Page %v", doc.GetID()+1),
 			ShortHTML: doc.GetShortHTML(queryString),
-			URL:       fmt.Sprintf("/pages/%v?q=%v", doc.GetID(), queryString),
+			URL:       fmt.Sprintf("/pages/%v?q=%v", doc.GetID()+1, queryString),
 		})
 	}
 	return &searchData{

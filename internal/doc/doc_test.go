@@ -183,7 +183,7 @@ func TestGetHighlightedHTML(t *testing.T) {
 			Name:      "Test Any Case Highlighted",
 			Text:      "King kING KING kIng",
 			Query:     "King",
-			ExpResult: `<span style="highlight">King</span> <span style="highlight">kING</span> <span style="highlight">KING</span> <span style="highlight">kIng</span>`,
+			ExpResult: `<mark>King</mark> <mark>kING</mark> <mark>KING</mark> <mark>kIng</mark>`,
 		},
 		{
 			Name: "Test Substring Highlighted",
@@ -200,13 +200,13 @@ func TestGetHighlightedHTML(t *testing.T) {
 			`,
 			Query: "Gutenberg",
 			ExpResult: `
-				Project <span style="highlight">Gutenberg</span>’s The Complete Works of William Shakespeare, by William Shakespeare
+				Project <mark>Gutenberg</mark>’s The Complete Works of William Shakespeare, by William Shakespeare
 
 				This eBook is for the use of anyone anywhere in the United States and
 				most other parts of the world at no cost and with almost no restrictions
 				whatsoever.  You may copy it, give it away or re-use it under the terms
-				of the Project <span style="highlight">Gutenberg</span> License included with this eBook or online at
-				www.<span style="highlight">gutenberg</span>.org.  If you are not located in the United States, you’ll
+				of the Project <mark>Gutenberg</mark> License included with this eBook or online at
+				www.<mark>gutenberg</mark>.org.  If you are not located in the United States, you’ll
 				have to check the laws of the country where you are located before using
 				this ebook.
 			`,
@@ -219,8 +219,8 @@ func TestGetHighlightedHTML(t *testing.T) {
 			d, err := doc.New(doc.Configs{
 				Lines: strings.Split(testCase.Text, "\n"),
 				HighlightTag: doc.Tag{
-					Start: `<span style="highlight">`,
-					End:   `</span>`,
+					Start: `<mark>`,
+					End:   `</mark>`,
 				},
 				ShortTag: doc.Tag{
 					Start: `<b>`,

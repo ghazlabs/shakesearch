@@ -27,8 +27,8 @@ var (
 		End:   "</b>",
 	}
 	highlightTag = doc.Tag{
-		Start: `<span style="highlight">"`,
-		End:   `</span>`,
+		Start: `<mark>`,
+		End:   `</mark>`,
 	}
 	// this standard stopwords from lucene index for english language
 	stopWords = []string{

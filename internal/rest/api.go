@@ -26,11 +26,17 @@ func (a *API) GetHandler() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/search", a.serveSearch)
 	r.Get("/pages/{page_number}", a.serveViewPage)
+	r.Get("/*", a.serveWeb)
 
 	return r
 }
 
 const defPageNumber = 1
+
+func (a *API) serveWeb(w http.ResponseWriter, r *http.Request) {
+	fs := http.FileServer(http.Dir("./web"))
+	fs.ServeHTTP(w, r)
+}
 
 func (a *API) serveSearch(w http.ResponseWriter, r *http.Request) {
 	// get query string from query params
