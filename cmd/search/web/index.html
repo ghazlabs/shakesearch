@@ -53,6 +53,9 @@
                             <p class="title is-size-4"><a href="#" v-on:click.prevent="openDocPage(relevant.id)">{{
                                     relevant.title }}</a></p>
                             <p v-html="relevant.short_html"></p>
+                            <br>
+                            <p class="is-size-7">Match Words: {{ relevant.found_words.join(", ") }}</p>
+                            <p class="is-size-7">Score: {{relevant.score }}</p>
                             <hr>
                         </div>
                     </li>
