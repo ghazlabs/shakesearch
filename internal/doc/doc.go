@@ -140,7 +140,7 @@ func buildMatchAnyCasePattern(word string) *regexp.Regexp {
 	for _, c := range word {
 		patternBuilder.WriteString("(" + strings.ToLower(string(c)) + "|" + strings.ToUpper(string(c)) + ")")
 	}
-	return regexp.MustCompile(patternBuilder.String())
+	return regexp.MustCompile(`\b` + patternBuilder.String() + `\b`)
 }
 
 func warpWordsByTag(text string, tag Tag, words []string) string {
