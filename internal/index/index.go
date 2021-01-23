@@ -39,11 +39,17 @@ func New(configs Configs) (*Index, error) {
 		for _, line := range configs.Documents[i].GetLines() {
 			// get unique words in the line
 			words := line.GetWords()
-			// skip line that has less or equal to one word, because most likely it doesn't contains any context
-			if len(words) <= 1 {
+			// skip line that has less than 3 words, because most likely it doesn't
+			// contain any context
+			if len(words) < 3 {
 				continue
 			}
 			for _, word := range words {
+				// if word is all capitals, most likely it's part of start dialog
+				// marking, in which means most likely have no context
+				if word == strings.ToUpper(word) {
+					continue
+				}
 				// lower word case, this is to make the search process
 				// case insensitive
 				word = strings.ToLower(word)

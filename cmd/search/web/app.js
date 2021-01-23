@@ -21,6 +21,10 @@ var app = new Vue({
                 this.relevants = result.data.relevants;
                 this.prev_page = result.data.prev_page;
                 this.next_page = result.data.next_page;
+                // alert if no result
+                if (!this.relevants.length || this.relevants.length == 0) {
+                    alert("No Result");
+                }
             } catch($e) {
                 console.log($e);
             }
