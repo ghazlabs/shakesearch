@@ -74,7 +74,7 @@ func (d *Document) GetData() string {
 //		     it immediately
 //		4.b. if current line is not next of previous line, append
 //			 "..." then append the current line
-//		4.c. limit the resulted paragraph to 170 chars
+//		4.c. limit the resulted paragraph to specified chars
 // 5. wrap every words in paragraph with specified html tag
 func (d *Document) GetShortHTML(words []string) string {
 	// find the lines for each words
