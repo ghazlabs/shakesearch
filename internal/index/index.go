@@ -110,7 +110,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	// convert appearance counter map to list of Relevant
 	relevants := make([]Relevant, 0, len(counterMap))
 	for docID, wordCounterMap := range counterMap {
-		// doc_score = total_count * total_words^2
+		// doc_score = total_count * total_words^3
 		totalCount := 0
 		totalWords := len(wordCounterMap)
 		foundWords := make([]string, 0, len(wordCounterMap))
@@ -118,7 +118,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 			totalCount += count
 			foundWords = append(foundWords, word)
 		}
-		score := float64(totalCount) * math.Pow(float64(totalWords), 2)
+		score := float64(totalCount) * math.Pow(float64(totalWords), 3)
 		relevants = append(relevants, Relevant{
 			Document:   i.docs[docID],
 			FoundWords: foundWords,
@@ -127,7 +127,15 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	}
 	// sort relevants list from highest to lowest score
 	sort.Slice(relevants, func(i, j int) bool {
-		return relevants[i].Score > relevants[j].Score
+		// if score is same, sort by document id, make the earlier
+		// document higher order
+		prevScore := relevants[i].Score
+		nextScore := relevants[j].Score
+		if prevScore == nextScore {
+			return relevants[i].Document.GetID() < relevants[j].Document.GetID()
+		}
+		// sort by score descendingly
+		return prevScore > nextScore
 	})
 	// if totalPages is zero, returns empty list and set total pages to 1
 	// notice that we set the total pages into 1 because logically we want
@@ -152,11 +160,6 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 		TotalPages: totalPages,
 	}
 	return result, nil
-}
-
-type tuppleDocIDCounter struct {
-	DocID   int
-	Counter int
 }
 
 // Get returns index for given id, throws error if id is not exists
