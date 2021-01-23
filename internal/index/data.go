@@ -13,12 +13,20 @@ type Document interface {
 // Query represents single query for search
 type Query interface {
 	GetWords() []string
+	GetUniqueWords() []string
 }
 
 // SearchResult represents result of Search()
 type SearchResult struct {
-	Relevants  []Document
+	Relevants  []Relevant
 	TotalPages int
+}
+
+// Relevant represents single relevant result
+type Relevant struct {
+	Document   Document
+	FoundWords []string
+	Score      float64
 }
 
 // GetResults represents result of Get()

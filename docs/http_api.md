@@ -43,12 +43,16 @@ GET /search?q=Hamlet+special
                 {
                     "id": 123,
                     "title": "Page 123",
-                    "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just..."
+                    "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just...",
+                    "found_words": ["hamlet", "special"],
+                    "score": 89.0
                 },
                 {
                     "id": 743,
                     "title": "Page 743",
-                    "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?"
+                    "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?",
+                    "found_words": ["hamlet", "special"],
+                    "score": 70.0
                 }
             ],
             "current_page": 1,

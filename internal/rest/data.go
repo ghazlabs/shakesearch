@@ -53,11 +53,14 @@ type searchData struct {
 
 func newSearchData(queryString string, currentPage int, result *index.SearchResult) *searchData {
 	searchRelevants := make([]searchRelevant, 0, len(result.Relevants))
-	for _, doc := range result.Relevants {
+	for _, relevant := range result.Relevants {
+		doc := relevant.Document
 		searchRelevants = append(searchRelevants, searchRelevant{
-			ID:        doc.GetID() + 1,
-			Title:     fmt.Sprintf("Page %v", doc.GetID()+1),
-			ShortHTML: doc.GetShortHTML(queryString),
+			ID:         doc.GetID() + 1,
+			Title:      fmt.Sprintf("Page %v", doc.GetID()+1),
+			ShortHTML:  doc.GetShortHTML(queryString),
+			FoundWords: relevant.FoundWords,
+			Score:      relevant.Score,
 		})
 	}
 	d := &searchData{
@@ -77,9 +80,11 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 }
 
 type searchRelevant struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	ShortHTML string `json:"short_html"`
+	ID         int      `json:"id"`
+	Title      string   `json:"title"`
+	ShortHTML  string   `json:"short_html"`
+	FoundWords []string `json:"found_words"`
+	Score      float64  `json:"score"`
 }
 
 type viewPageData struct {

@@ -19,7 +19,7 @@ func (q Query) GetWords() []string {
 	words := rgx.FindAllString(string(q), -1)
 	filteredWords := make([]string, 0, len(words))
 	for _, word := range words {
-		word = rplcr.Replace((strings.Trim(word, ".,*:][#;")))
+		word = rplcr.Replace((strings.Trim(word, ".,*:][#;!?")))
 		if len(word) == 0 {
 			continue
 		}

@@ -69,9 +69,9 @@ func New(configs Configs) (*Index, error) {
 // Search returns relevant documents based on given query, page start from 0
 func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	// break query into words
-	words := q.GetWords()
-	// create appearance counter map
-	counterMap := map[int]int{}
+	words := q.GetUniqueWords()
+	// create appearance counter map, this is used for document scoring
+	counterMap := map[int]map[string]int{}
 	// get document ids for each query words
 	for _, word := range words {
 		// lowercase the word, so we could do insensitive
@@ -85,25 +85,40 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 		// increment appearance counter map
 		docIDs := i.revIndexWordMap[word]
 		for _, docID := range docIDs {
-			counterMap[docID]++
+			v, ok := counterMap[docID]
+			if !ok {
+				v = map[string]int{}
+			}
+			v[word]++
+			counterMap[docID] = v
 		}
 	}
-	// convert appearance counter map to list of tupple (docID, counter)
-	tupples := make([]tuppleDocIDCounter, 0, len(counterMap))
-	for docID, counter := range counterMap {
-		tupples = append(tupples, tuppleDocIDCounter{
-			DocID:   docID,
-			Counter: counter,
+	// convert appearance counter map to list of Relevant
+	relevants := make([]Relevant, 0, len(counterMap))
+	for docID, wordCounterMap := range counterMap {
+		// doc_score = total_count * total_words
+		totalCount := 0
+		totalWords := len(wordCounterMap)
+		foundWords := make([]string, 0, len(wordCounterMap))
+		for word, count := range wordCounterMap {
+			totalCount += count
+			foundWords = append(foundWords, word)
+		}
+		score := float64(totalCount * totalWords)
+		relevants = append(relevants, Relevant{
+			Document:   i.docs[docID],
+			FoundWords: foundWords,
+			Score:      score,
 		})
 	}
-	// sort the list from highest to lowest appearance
-	sort.Slice(tupples, func(i, j int) bool {
-		return tupples[i].Counter > tupples[j].Counter
+	// sort relevants list from highest to lowest score
+	sort.Slice(relevants, func(i, j int) bool {
+		return relevants[i].Score > relevants[j].Score
 	})
 	// if totalPages is zero, returns empty list and set total pages to 1
 	// notice that we set the total pages into 1 because logically we want
 	// to show the empty result in first page
-	totalPages := int(math.Ceil(float64(len(tupples)) / float64(i.resultPageLimit)))
+	totalPages := int(math.Ceil(float64(len(relevants)) / float64(i.resultPageLimit)))
 	if totalPages == 0 && page == 0 {
 		return &SearchResult{Relevants: nil, TotalPages: 1}, nil
 	}
@@ -114,17 +129,12 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	// select the elements for given page
 	startIdx := page * i.resultPageLimit
 	endIdx := startIdx + i.resultPageLimit
-	if endIdx >= len(tupples) {
-		endIdx = len(tupples)
+	if endIdx >= len(relevants) {
+		endIdx = len(relevants)
 	}
 	// convert back tupples to list of docs
-	selectedTupples := tupples[startIdx:endIdx]
-	var docs []Document
-	for _, tupple := range selectedTupples {
-		docs = append(docs, i.docs[tupple.DocID])
-	}
 	result := &SearchResult{
-		Relevants:  docs,
+		Relevants:  relevants[startIdx:endIdx],
 		TotalPages: totalPages,
 	}
 	return result, nil
