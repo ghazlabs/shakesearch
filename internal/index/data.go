@@ -8,6 +8,7 @@ type Document interface {
 	GetData() string
 	GetShortHTML(query string) string
 	GetHighlightedHTML(query string) string
+	GetLines() []Line
 }
 
 // Query represents single query for search
@@ -15,6 +16,9 @@ type Query interface {
 	GetWords() []string
 	GetUniqueWords() []string
 }
+
+// Line represents single line in document
+type Line Query
 
 // SearchResult represents result of Search()
 type SearchResult struct {

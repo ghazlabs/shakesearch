@@ -35,25 +35,33 @@ func New(configs Configs) (*Index, error) {
 	for i := 0; i < len(configs.Documents); i++ {
 		// set doc id to value of i
 		configs.Documents[i].SetID(i)
-		// get doc words and iterate on them
-		for _, word := range configs.Documents[i].GetWords() {
-			// lower word case, this is to make the search process
-			// case insensitive
-			word = strings.ToLower(word)
-			// if word is excluded, just skip it
-			_, skipped := excludeWordMap[word]
-			if skipped {
+		// get doc lines and iterate on them
+		for _, line := range configs.Documents[i].GetLines() {
+			// get unique words in the line
+			words := line.GetWords()
+			// skip line that has less or equal to one word, because most likely it doesn't contains any context
+			if len(words) <= 1 {
 				continue
 			}
-			// get current document ids for word
-			v, ok := revIndexMap[word]
-			if !ok {
-				// if it's new word, initialize new list
-				v = []int{}
+			for _, word := range words {
+				// lower word case, this is to make the search process
+				// case insensitive
+				word = strings.ToLower(word)
+				// if word is excluded, just skip it
+				_, skipped := excludeWordMap[word]
+				if skipped {
+					continue
+				}
+				// get current document ids for word
+				v, ok := revIndexMap[word]
+				if !ok {
+					// if it's new word, initialize new list
+					v = []int{}
+				}
+				// insert current document id to map
+				v = append(v, configs.Documents[i].GetID())
+				revIndexMap[word] = v
 			}
-			// insert current document id to map
-			v = append(v, configs.Documents[i].GetID())
-			revIndexMap[word] = v
 		}
 	}
 	// initialize index

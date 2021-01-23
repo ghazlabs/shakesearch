@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strings"
 
+	"pulley.com/shakesearch/internal/index"
 	"pulley.com/shakesearch/internal/query"
 )
 
@@ -158,4 +159,13 @@ func warpWordsByTag(text string, tag Tag, words []string) string {
 		}
 	}
 	return dataHTML
+}
+
+// GetLines returns document lines
+func (d *Document) GetLines() []index.Line {
+	lines := make([]index.Line, 0, len(d.lines))
+	for _, lineStr := range d.lines {
+		lines = append(lines, query.Query(lineStr))
+	}
+	return lines
 }

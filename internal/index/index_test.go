@@ -2,6 +2,7 @@ package index_test
 
 import (
 	"errors"
+	"strings"
 	"testing"
 
 	"pulley.com/shakesearch/internal/errs"
@@ -249,4 +250,13 @@ func (d *mockDocument) GetHighlightedHTML(query string) string {
 	// we don't use this in search, so it's fine to just
 	// returns arbitrary string
 	return d.data
+}
+
+func (d *mockDocument) GetLines() []index.Line {
+	lineStrs := strings.Split(d.data, "\n")
+	lines := make([]index.Line, 0, len(lineStrs))
+	for _, lineStr := range lineStrs {
+		lines = append(lines, query.Query(lineStr))
+	}
+	return lines
 }
