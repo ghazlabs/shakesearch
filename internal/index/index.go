@@ -110,7 +110,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 	// convert appearance counter map to list of Relevant
 	relevants := make([]Relevant, 0, len(counterMap))
 	for docID, wordCounterMap := range counterMap {
-		// doc_score = total_count * total_words
+		// doc_score = total_count * total_words^2
 		totalCount := 0
 		totalWords := len(wordCounterMap)
 		foundWords := make([]string, 0, len(wordCounterMap))
@@ -118,7 +118,7 @@ func (i *Index) Search(q Query, page int) (*SearchResult, error) {
 			totalCount += count
 			foundWords = append(foundWords, word)
 		}
-		score := float64(totalCount * totalWords)
+		score := float64(totalCount) * math.Pow(float64(totalWords), 2)
 		relevants = append(relevants, Relevant{
 			Document:   i.docs[docID],
 			FoundWords: foundWords,

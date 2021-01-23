@@ -76,9 +76,7 @@ func (d *Document) GetData() string {
 //			 "..." then append the current line
 //		4.c. limit the resulted paragraph to 170 chars
 // 5. wrap every words in paragraph with specified html tag
-func (d *Document) GetShortHTML(queryString string) string {
-	// break query string into words
-	words := query.Query(queryString).GetWords()
+func (d *Document) GetShortHTML(words []string) string {
 	// find the lines for each words
 	lineMap := map[int]struct{}{}
 	for _, word := range words {
@@ -130,11 +128,11 @@ func (d *Document) GetShortHTML(queryString string) string {
 // GetHighlightedHTML returns full document data, but for
 // every words in the query it will wrapped by specified
 // highlight html tag
-func (d *Document) GetHighlightedHTML(queryString string) string {
-	// breakdown query into words
-	words := query.Query(queryString).GetUniqueWords()
+func (d *Document) GetHighlightedHTML(words []string) string {
+	// make sure words are unique
+	uniqueWords := query.Query(strings.Join(words, " ")).GetUniqueWords()
 	// wrap every words with highlight tag
-	return warpWordsByTag(d.data, d.highlightTag, words)
+	return warpWordsByTag(d.data, d.highlightTag, uniqueWords)
 }
 
 func buildMatchAnyCasePattern(word string) *regexp.Regexp {

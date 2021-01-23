@@ -240,13 +240,13 @@ func (d *mockDocument) GetData() string {
 	return d.data
 }
 
-func (d *mockDocument) GetShortHTML(query string) string {
+func (d *mockDocument) GetShortHTML(words []string) string {
 	// we don't use this in search, so it's fine to just
 	// returns arbitrary string
 	return d.data
 }
 
-func (d *mockDocument) GetHighlightedHTML(query string) string {
+func (d *mockDocument) GetHighlightedHTML(words []string) string {
 	// we don't use this in search, so it's fine to just
 	// returns arbitrary string
 	return d.data

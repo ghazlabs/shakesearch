@@ -45,14 +45,16 @@ GET /search?q=Hamlet+special
                     "title": "Page 123",
                     "short_html": "<b>Hamlet</b> is my <b>special</b> egg. How are you buddy? I'm not too fond with literature art so I could just...",
                     "found_words": ["hamlet", "special"],
-                    "score": 89.0
+                    "score": 89.0,
+                    "url": "/pages/123?q=hamlet,special"
                 },
                 {
                     "id": 743,
                     "title": "Page 743",
                     "short_html": "This is <b>special</b> drawing created by me. Why don't you just read <b>hamlet</b>?",
                     "found_words": ["hamlet", "special"],
-                    "score": 70.0
+                    "score": 70.0,
+                    "url": "/pages/743?q=hamlet,special"
                 }
             ],
             "current_page": 1,
@@ -124,12 +126,12 @@ Page number started from `1`.
 
 **Query Params:**
 
-- `q`, String, _OPTIONAL_ => words that will be highlighted in the page
+- `q`, String, _OPTIONAL_ => words that will be highlighted in the page separated by comma
 
 **Example Request:**
 
 ```bash
-GET /pages/123?q=Hamlet+special
+GET /pages/123?q=Hamlet,special
 ```
 
 **Success Response:**

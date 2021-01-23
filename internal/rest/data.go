@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"pulley.com/shakesearch/internal/errs"
 	"pulley.com/shakesearch/internal/index"
@@ -55,12 +56,14 @@ func newSearchData(queryString string, currentPage int, result *index.SearchResu
 	searchRelevants := make([]searchRelevant, 0, len(result.Relevants))
 	for _, relevant := range result.Relevants {
 		doc := relevant.Document
+		docID := doc.GetID() + 1
 		searchRelevants = append(searchRelevants, searchRelevant{
-			ID:         doc.GetID() + 1,
-			Title:      fmt.Sprintf("Page %v", doc.GetID()+1),
-			ShortHTML:  doc.GetShortHTML(queryString),
+			ID:         docID,
+			Title:      fmt.Sprintf("Page %v", docID),
+			ShortHTML:  doc.GetShortHTML(relevant.FoundWords),
 			FoundWords: relevant.FoundWords,
 			Score:      relevant.Score,
+			URL:        fmt.Sprintf("/pages/%v?q=%v", docID, strings.Join(relevant.FoundWords, ",")),
 		})
 	}
 	d := &searchData{
@@ -85,6 +88,7 @@ type searchRelevant struct {
 	ShortHTML  string   `json:"short_html"`
 	FoundWords []string `json:"found_words"`
 	Score      float64  `json:"score"`
+	URL        string   `json:"url"`
 }
 
 type viewPageData struct {
@@ -97,7 +101,7 @@ type viewPageData struct {
 
 func newViewPageData(queryString string, currentPage int, result *index.GetResults) *viewPageData {
 	d := &viewPageData{
-		BodyHTML:    result.Doc.GetHighlightedHTML(queryString),
+		BodyHTML:    result.Doc.GetHighlightedHTML(strings.Split(queryString, ",")),
 		CurrentPage: currentPage,
 		TotalPages:  result.TotalDocs,
 	}

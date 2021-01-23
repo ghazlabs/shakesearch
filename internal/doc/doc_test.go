@@ -14,7 +14,7 @@ func TestGetShortHTML(t *testing.T) {
 	testCases := []struct {
 		Name      string
 		Text      string
-		Query     string
+		Words     []string
 		ExpResult string
 	}{
 		{
@@ -71,7 +71,7 @@ func TestGetShortHTML(t *testing.T) {
 							THE COMEDY OF ERRORS
 							
 			`,
-			Query:     "Gutenberg",
+			Words:     []string{"Gutenberg"},
 			ExpResult: "Project <b>Gutenberg</b>’s The Complete Works of William Shakespeare, by William Shakespeare ... of the Project <b>Gutenberg</b> License included with this eBook or online at www.guten...",
 		},
 		{
@@ -99,7 +99,7 @@ func TestGetShortHTML(t *testing.T) {
 
 				THE TRAGEDY OF KING LEAR
 			`,
-			Query:     "King Henry",
+			Words:     []string{"King", "Henry"},
 			ExpResult: "THE FIRST PART OF <b>KING</b> <b>HENRY</b> THE FOURTH ... THE SECOND PART OF <b>KING</b> <b>HENRY</b> THE FOURTH ... THE LIFE OF <b>KING</b> <b>HENRY</b> THE FIFTH ... THE FIRST PART OF <b>HENRY</b> THE SIXTH ... THE SE...",
 		},
 		{
@@ -139,7 +139,7 @@ func TestGetShortHTML(t *testing.T) {
 				ANTONY.
 				Fulvia is dead.			
 			`,
-			Query:     "Cleopatra dies instantly",
+			Words:     []string{"Cleopatra", "dies", "instantly"},
 			ExpResult: "esteemed nothing. <b>Cleopatra</b>, catching but the least noise of this, <b>dies</b> <b>instantly</b>. I have seen her die twenty times upon far poorer moment. I",
 		},
 	}
@@ -160,7 +160,7 @@ func TestGetShortHTML(t *testing.T) {
 				t.Fatalf("unable to initialize new document due: %v", err)
 			}
 			// get short html
-			result := d.GetShortHTML(testCase.Query)
+			result := d.GetShortHTML(testCase.Words)
 			if result != testCase.ExpResult {
 				t.Fatalf("unexpected result, exp: %v, got: %v", testCase.ExpResult, result)
 			}
@@ -173,19 +173,19 @@ func TestGetHighlightedHTML(t *testing.T) {
 	testCases := []struct {
 		Name      string
 		Text      string
-		Query     string
+		Words     []string
 		ExpResult string
 	}{
 		{
 			Name:      "Test No Highlight",
 			Text:      "Hello my name is Nino! How are you?",
-			Query:     "Shino",
+			Words:     []string{"Shino"},
 			ExpResult: "Hello my name is Nino! How are you?",
 		},
 		{
 			Name:      "Test Any Case Highlighted",
 			Text:      "King kING KING kIng",
-			Query:     "King",
+			Words:     []string{"King"},
 			ExpResult: `<mark>King</mark> <mark>kING</mark> <mark>KING</mark> <mark>kIng</mark>`,
 		},
 		{
@@ -201,7 +201,7 @@ func TestGetHighlightedHTML(t *testing.T) {
 				have to check the laws of the country where you are located before using
 				this ebook.
 			`,
-			Query: "Gutenberg",
+			Words: []string{"Gutenberg"},
 			ExpResult: `
 				Project <mark>Gutenberg</mark>’s The Complete Works of William Shakespeare, by William Shakespeare
 
@@ -235,7 +235,7 @@ func TestGetHighlightedHTML(t *testing.T) {
 				t.Fatalf("unable to initialize document due: %v", err)
 			}
 			// get highlighted html
-			result := d.GetHighlightedHTML(testCase.Query)
+			result := d.GetHighlightedHTML(testCase.Words)
 			if result != testCase.ExpResult {
 				t.Fatalf("unexpected result, exp: %v, got: %v", testCase.ExpResult, result)
 			}

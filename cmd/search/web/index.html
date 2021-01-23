@@ -50,7 +50,8 @@
                 <ul>
                     <li v-for="relevant in relevants">
                         <div class="item">
-                            <p class="title is-size-4"><a href="#" v-on:click.prevent="openDocPage(relevant.id)">{{
+                            <p class="title is-size-4"><a href="#"
+                                    v-on:click.prevent="openDocPage(relevant.id, relevant.found_words)">{{
                                     relevant.title }}</a></p>
                             <p v-html="relevant.short_html"></p>
                             <br>
@@ -90,13 +91,15 @@
                     <footer id="modal_footer" class="modal-card-foot is-mobile">
                         <div class="level-left">
                             <div class="level-item">
-                                <a href="#" v-if="prev_doc_page" v-on:click.prevent="openDocPage(prev_doc_page)">← {{
+                                <a href="#" v-if="prev_doc_page"
+                                    v-on:click.prevent="openDocPage(prev_doc_page, doc_found_words)">← {{
                                     prev_doc_page }}</a>
                             </div>
                         </div>
                         <div class="level-right">
                             <div class="level-item">
-                                <a href="#" v-if="next_doc_page" v-on:click.prevent="openDocPage(next_doc_page)">{{
+                                <a href="#" v-if="next_doc_page"
+                                    v-on:click.prevent="openDocPage(next_doc_page, doc_found_words)">{{
                                     next_doc_page }} →</a>
                             </div>
                         </div>
