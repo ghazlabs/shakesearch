@@ -1,8 +1,8 @@
 # ShakeSearch
 
-I'm not a fan of literary arts even in my own native language. So I'm not so sure how to approach this problem correctly.
+I'm not a fan of literary arts even in my own native language. So I'm not so sure how to approach this problem using the correct perspective. 😅
 
-But when I was writing my final thesis in college, I need to also read many books for my research. So I think maybe I could use this experience to approach this issue. 😅
+But when I was writing my undergraduate thesis, I need to also read many books for the sake of my research. So I think maybe I could apply this experience to approach this issue. 😅
 
 ## Basic Idea
 
